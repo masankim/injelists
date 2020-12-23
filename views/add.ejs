@@ -1,0 +1,31 @@
+<!-- //add.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1><a href='/topic'>Server Side Javascript</a></h1>
+    <ol>
+      <% for(var i=0; i<topics.length;i++){ %>
+        <li>
+          <a href='/topic/<%- topics[i].id -%>'>
+            <%= topics[i].title %>
+          </a>
+        </li>
+      <% }; %>
+    </ol>
+    <article>
+      <form action="/topic/add" method="POST">
+        <p><input type="text" name="title"  placeholder="title" ></p> 
+        <p><textarea name="description" rows="6" cols="50" placeholder="description"> </textarea></p>
+        <p><input type="text" name="author"  placeholder="author"></p>
+        <p><input type="submit" value="추가확정"></p>
+      </form>
+    </article>
+    <ul>
+        <li><a href="/topic/add">add</a></li>
+    </ul>
+  </body>
+</html>

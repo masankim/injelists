@@ -62,6 +62,23 @@ callback은 쉽게 말하자면 어떤 일을 다른 객체에게 시키고, 그
 
 
 
+예를 들어 시나리오 생각해 봅시다.
+
+서버가 http://lolcalhost:8080 에서 띄워져 있습니다.
+
+크롬 클라이언트가 http://lolcalhost:8080/data 로 get방식으로 request을 합니다.
+
+크롬 클라이언트에 "Hello World !!!!!" 를 보내고 그걸 클라이언트가 받아서 브라우저에서 보여지게 한다.
+
+```javascript
+app.get('/data', function(request , response ) {
+    console.log(request)
+    response.send("Hello world!!!!")
+})
+```
+
+
+
 get메소드와 post메소드 등을 활용하여 routing을 만든다.
 
 일정한 경로로 요청이 들어왔을때 서버에서 반응할 것들을 콜백함수에서 처리한다.
@@ -170,6 +187,7 @@ use메소드를 이용해서 미들웨어 등록
 const bodyParser = require('body-parser')
 
 app.use(bodyPaser.urlencoded({extended:true})
+app.use(bodyParser.json())
 ```
 
 
@@ -268,7 +286,7 @@ mysql에 접속하여 topic에 있는 contents를 모두 조회해서 console창
 mysql 라이브러를 활용해서 mysql 접속한다.
 
 ```javascript
-const mysql = require('mysql')
+const mysql = require('mysql2')
 
 // mysql.createConnection(객체의형태로 접속 정보)
 const db = mysql.createConnection({
@@ -278,7 +296,7 @@ const db = mysql.createConnection({
 ```
 
 ```powershell
-npm install mysql
+npm install mysql2
 ```
 
 
@@ -293,7 +311,7 @@ const db = mysql.createConnection({
 })
 
 
-app.get('/topic', function(req, res){
+app.get('/topics', function(req, res){
     let sql = 'SELECT * FROM topic';
     db.query(sql,function(err, result ){
         if(err){
@@ -326,7 +344,7 @@ o2 database 내용
 
 database의o2에 있는 topic 테이블에 contents를 추가하는 기능을 구현한다.
 
-[url : http://localhost:8080/topic](http://localhost:8080/topic)
+[url : http://localhost:8080/topics](http://localhost:8080/topics)
 
 Method: POST
 
@@ -355,7 +373,7 @@ db 에 저장되도록 요청
 
 
 ```javascript
-app.post("/topic" ,app.post('/topic', function(req, res){
+app.post('/topics', function(req, res){
     let sql = "INSERT INTO `topic` (`title`, `description`, `author`) VALUES (?,?,?);"
     // console.log(req.body.title)
     // res.send(req.body.title)
@@ -371,14 +389,14 @@ app.post("/topic" ,app.post('/topic', function(req, res){
             res.send("Success")
         }
     }) 
-}))
+})
 ```
 
 
 
 라우팅 파일을 만들어 app.js에서 미들웨어로 등록한다.
 
-router폴더에 apiRouter.js를 추가하고 다음과 같이 코드를 생성한다.
+routes폴더에 apiRouter.js를 추가하고 다음과 같이 코드를 생성한다.
 
 전에 app.js에 있었던 mysql관련등 일부 코드를 이곳으로 옮긴다.
 
@@ -669,7 +687,7 @@ router.post('/topic/add' , function(req, res) {
             res.redirect('/topic')
         }
     }) 
-    
+})
 ...
 ```
 
@@ -683,10 +701,6 @@ index.ejs의 삭제버튼 추가
 <!-- 삭제버트 추가 -->
           <a href="/topic/<%= topics[i].id %>/delete" ><button onclick="confirm('정말삭제하시겠습니까')">삭제하기</button></a>
 ```
-
-
-
-
 
 apiRouter.js
 
